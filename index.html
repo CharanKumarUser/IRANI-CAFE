@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Persian Delight Cafe</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #D4AF37;
+            --secondary: #C1272D;
+            --dark: #3a3a3a;
+            --light: #f8f8f8;
+            --shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+            padding-bottom: 20px;
+        }
+        .container {
+            max-width: 100%;
+            padding: 0 10px;
+        }
+        header {
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+            color: white;
+            padding: 15px 0;
+            text-align: center;
+            box-shadow: var(--shadow);
+            margin-bottom: 12px;
+            position: relative;
+        }
+        h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        h2 {
+            font-size: 1.2rem;
+            margin-bottom: 12px;
+            color: var(--secondary);
+        }
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+        .product-card {
+            background: white;
+            border-radius: 8px;
+            padding: 8px;
+            box-shadow: var(--shadow);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        .product-img-container {
+            position: relative;
+            width: 100%;
+            padding-top: 100%;
+            overflow: hidden;
+            border-radius: 4px;
+            margin-bottom: 4px;
+        }
+        .product-img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .product-info {
+            flex: 1;
+        }
+        .product-name {
+            font-weight: 600;
+            font-size: 0.75rem;
+            margin-bottom: 3px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .product-price {
+            color: var(--secondary);
+            font-weight: 700;
+            font-size: 0.75rem;
+            margin-bottom: 4px;
+        }
+        .counter-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: auto;
+        }
+        .counter-btn {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            border: none;
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        .counter-value {
+            font-weight: 600;
+            min-width: 16px;
+            text-align: center;
+            font-size: 0.75rem;
+        }
+        .delete-btn {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            background: rgba(220, 53, 69, 0.8);
+            color: white;
+            border: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            font-size: 0.6rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+        }
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            border-radius: 6px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: center;
+            margin: 8px 0;
+            font-size: 0.9rem;
+        }
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        .btn-secondary {
+            background: var(--secondary);
+            color: white;
+        }
+        .form-group {
+            margin-bottom: 12px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 4px;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        .form-control {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 0.9rem;
+        }
+        .image-upload {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 12px 0;
+        }
+        .image-upload-btn {
+            background: #f0f0f0;
+            color: var(--dark);
+            padding: 8px 12px;
+            border-radius: 5px;
+            border: 1px dashed #ccc;
+            cursor: pointer;
+            text-align: center;
+            margin-bottom: 8px;
+            width: 100%;
+            font-size: 0.85rem;
+        }
+        .image-preview-container {
+            position: relative;
+            width: 100%;
+            padding-top: 100%;
+            margin-bottom: 8px;
+        }
+        .image-preview {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 6px;
+            border: 1px dashed #ccc;
+            display: none;
+        }
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+        .modal.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+        .modal-content {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            width: 90%;
+            max-width: 350px;
+            transform: translateY(20px);
+            transition: transform 0.3s;
+        }
+        .modal.active .modal-content {
+            transform: translateY(0);
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .modal-title {
+            font-size: 1.1rem;
+            color: var(--secondary);
+        }
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: var(--dark);
+        }
+        .stats-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+            font-size: 0.9rem;
+        }
+        .stats-item:last-child {
+            border-bottom: none;
+        }
+        .stats-label {
+            font-weight: 500;
+        }
+        .stats-value {
+            font-weight: 700;
+            color: var(--secondary);
+        }
+        .empty-state {
+            text-align: center;
+            padding: 20px 0;
+            color: #777;
+            font-size: 0.9rem;
+            grid-column: 1 / -1;
+        }
+        .tabs {
+            display: flex;
+            margin-bottom: 12px;
+            border-bottom: 1px solid #ddd;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        .tab {
+            padding: 8px 12px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            font-size: 0.9rem;
+            white-space: nowrap;
+            flex: 1;
+            text-align: center;
+        }
+        .tab.active {
+            border-bottom: 3px solid var(--primary);
+            font-weight: 600;
+            color: var(--secondary);
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .fa-icon {
+            margin-right: 4px;
+            font-size: 0.9em;
+        }
+        .file-size-warning {
+            color: var(--secondary);
+            font-size: 0.75rem;
+            margin-top: -6px;
+            margin-bottom: 8px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1><i class="fas fa-utensils fa-icon"></i>Irani Cafe</h1>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab('menu')">
+                <i class="fas fa-list fa-icon"></i>Menu
+            </div>
+            <div class="tab" onclick="switchTab('stats')">
+                <i class="fas fa-chart-bar fa-icon"></i>Stats
+            </div>
+            <div class="tab" onclick="switchTab('add')">
+                <i class="fas fa-plus-circle fa-icon"></i>Add
+            </div>
+        </div>
+
+        <div id="menu-tab" class="tab-content active">
+            <div class="products-grid" id="products-list">
+                <!-- Products will be loaded here -->
+            </div>
+            <div id="empty-menu" class="empty-state">
+                <i class="fas fa-utensils" style="font-size: 1.8rem; margin-bottom: 8px;"></i>
+                <p>No items in menu. Add some products!</p>
+            </div>
+        </div>
+
+        <div id="stats-tab" class="tab-content">
+            <div id="stats-container">
+                <!-- Stats will be loaded here -->
+            </div>
+            <button class="btn btn-secondary" onclick="resetStats()">
+                <i class="fas fa-sync-alt fa-icon"></i>Reset Today's Counts
+            </button>
+            <div id="empty-stats" class="empty-state">
+                <i class="fas fa-chart-pie" style="font-size: 1.8rem; margin-bottom: 8px;"></i>
+                <p>No statistics available for today</p>
+            </div>
+        </div>
+
+        <div id="add-tab" class="tab-content">
+            <div class="form-group">
+                <label for="item-name"><i class="fas fa-tag fa-icon"></i>Item Name</label>
+                <input type="text" id="item-name" class="form-control" placeholder="e.g. Chelo Kabab">
+            </div>
+            <div class="form-group">
+                <label for="item-price"><i class="fas fa-dollar-sign fa-icon"></i>Price ($)</label>
+                <input type="text" id="item-price" class="form-control" placeholder="e.g. 12.99">
+            </div>
+            <div class="form-group">
+                <label><i class="fas fa-camera fa-icon"></i>Item Image</label>
+                <div class="image-upload">
+                    <input type="file" id="image-upload" accept="image/*" style="display: none;">
+                    <button type="button" class="image-upload-btn" onclick="document.getElementById('image-upload').click()">
+                        <i class="fas fa-camera fa-icon"></i>Take Photo or Choose from Gallery
+                    </button>
+                    <div class="file-size-warning" id="file-size-warning">
+                        Maximum image size is 5MB
+                    </div>
+                    <div class="image-preview-container">
+                        <img id="image-preview" class="image-preview" alt="Image preview">
+                    </div>
+                </div>
+            </div>
+            <button type="button" class="btn btn-primary" id="add-product-btn">
+                <i class="fas fa-plus-circle fa-icon"></i>Add to Menu
+            </button>
+        </div>
+    </div>
+
+    <!-- Order Confirmation Modal -->
+    <div class="modal" id="confirmation-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title"><i class="fas fa-check-circle fa-icon"></i>Order Confirmation</h3>
+                <button class="close-btn" onclick="hideModal('confirmation-modal')">×</button>
+            </div>
+            <p id="confirmation-message"></p>
+            <button class="btn btn-primary" onclick="hideModal('confirmation-modal')">
+                <i class="fas fa-thumbs-up fa-icon"></i>OK
+            </button>
+        </div>
+    </div>
+
+    <!-- Alert Modal -->
+    <div class="modal" id="alert-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title"><i class="fas fa-exclamation-circle fa-icon"></i>Notification</h3>
+                <button class="close-btn" onclick="hideModal('alert-modal')">×</button>
+            </div>
+            <p id="alert-message"></p>
+            <div style="display: flex; gap: 8px;">
+                <button class="btn btn-primary" id="alert-confirm-btn">
+                    <i class="fas fa-check fa-icon"></i>OK
+                </button>
+                <button class="btn btn-secondary" id="alert-cancel-btn" style="display: none;">
+                    <i class="fas fa-times fa-icon"></i>Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // IndexedDB setup
+        const dbName = "PersianDelightDB";
+        const dbVersion = 1;
+        let db;
+
+        // Global variables
+        let products = [];
+        let currentImage = null;
+        const MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5MB in bytes
+
+        // Initialize IndexedDB
+        function initDB() {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open(dbName, dbVersion);
+
+                request.onerror = () => reject("Error opening database");
+                
+                request.onsuccess = (event) => {
+                    db = event.target.result;
+                    resolve();
+                };
+
+                request.onupgradeneeded = (event) => {
+                    db = event.target.result;
+                    db.createObjectStore("products", { keyPath: "id" });
+                    db.createObjectStore("counts", { keyPath: "date" });
+                };
+            });
+        }
+
+        // Initialize the app
+        async function init() {
+            await initDB();
+            await loadProducts();
+            renderMenu();
+            setupImageUpload();
+            setupAddProductButton();
+        }
+
+        // Load products from IndexedDB
+        async function loadProducts() {
+            return new Promise((resolve) => {
+                const transaction = db.transaction(["products"], "readonly");
+                const store = transaction.objectStore("products");
+                const request = store.getAll();
+
+                request.onsuccess = () => {
+                    products = request.result;
+                    resolve();
+                };
+                request.onerror = () => {
+                    console.error("Error loading products");
+                    resolve();
+                };
+            });
+        }
+
+        // Save product to IndexedDB
+        async function saveProduct(product) {
+            return new Promise((resolve) => {
+                const transaction = db.transaction(["products"], "readwrite");
+                const store = transaction.objectStore("products");
+                const request = store.put(product);
+
+                request.onsuccess = () => resolve();
+                request.onerror = () => console.error("Error saving product");
+            });
+        }
+
+        // Delete product from IndexedDB
+        async function deleteProductFromDB(productId) {
+            return new Promise((resolve) => {
+                const transaction = db.transaction(["products"], "readwrite");
+                const store = transaction.objectStore("products");
+                const request = store.delete(productId);
+
+                request.onsuccess = () => resolve();
+                request.onerror = () => console.error("Error deleting product");
+            });
+        }
+
+        // Setup image upload functionality
+        function setupImageUpload() {
+            const uploadInput = document.getElementById('image-upload');
+            const sizeWarning = document.getElementById('file-size-warning');
+            
+            uploadInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                
+                if (!file) return;
+                
+                if (file.size > MAX_IMAGE_SIZE) {
+                    sizeWarning.style.display = 'block';
+                    currentImage = null;
+                    document.getElementById('image-preview').style.display = 'none';
+                    showAlert('Image size must be less than 5MB');
+                    return;
+                }
+                
+                sizeWarning.style.display = 'none';
+                
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    currentImage = event.target.result;
+                    const preview = document.getElementById('image-preview');
+                    preview.src = currentImage;
+                    preview.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        // Setup add product button
+        function setupAddProductButton() {
+            document.getElementById('add-product-btn').addEventListener('click', addProduct);
+        }
+
+        // Render the menu
+        function renderMenu() {
+            const productsList = document.getElementById('products-list');
+            const emptyMenu = document.getElementById('empty-menu');
+            
+            if (products.length === 0) {
+                productsList.innerHTML = '';
+                emptyMenu.style.display = 'flex';
+                return;
+            }
+            
+            emptyMenu.style.display = 'none';
+            productsList.innerHTML = '';
+            
+            products.forEach(product => {
+                const productElement = document.createElement('div');
+                productElement.className = 'product-card';
+                productElement.innerHTML = `
+                    <button class="delete-btn" onclick="deleteProduct(${product.id})" title="Delete">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                    <div class="product-img-container">
+                        <img src="${product.image}" class="product-img" alt="${product.name}">
+                    </div>
+                    <div class="product-info">
+                        <div class="product-name">${product.name}</div>
+                        <div class="product-price">$${product.price}</div>
+                        <div class="counter-container">
+                            <button class="counter-btn" onclick="updateCount(${product.id}, -1)" title="Decrease">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            <div class="counter-value" id="counter-${product.id}">${product.count || 0}</div>
+                            <button class="counter-btn" onclick="updateCount(${product.id}, 1)" title="Increase">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                productsList.appendChild(productElement);
+            });
+        }
+
+        // Add a new product
+        async function addProduct() {
+            const name = document.getElementById('item-name').value.trim();
+            const price = document.getElementById('item-price').value.trim();
+            
+            if (!name || !price || !currentImage) {
+                showAlert('Please fill all fields and add an image');
+                return;
+            }
+            
+            if (isNaN(parseFloat(price))) {
+                showAlert('Please enter a valid price');
+                return;
+            }
+            
+            const newId = products.length > 0 ? Math.max(...products.map(p => p.id)) + 1 : 1;
+            const newProduct = {
+                id: newId,
+                name: name,
+                price: parseFloat(price).toFixed(2),
+                image: currentImage
+            };
+            
+            await saveProduct(newProduct);
+            products.push(newProduct);
+            renderMenu();
+            
+            // Reset form
+            document.getElementById('item-name').value = '';
+            document.getElementById('item-price').value = '';
+            document.getElementById('image-preview').style.display = 'none';
+            document.getElementById('image-preview').src = '';
+            currentImage = null;
+            document.getElementById('file-size-warning').style.display = 'none';
+            
+            showAlert('Product added successfully!');
+            switchTab('menu');
+        }
+
+        // Delete a product
+        async function deleteProduct(productId) {
+            showConfirm('Are you sure you want to delete this item?', async () => {
+                await deleteProductFromDB(productId);
+                products = products.filter(product => product.id !== productId);
+                renderMenu();
+                showAlert('Item deleted successfully');
+            });
+        }
+
+        // Get count for a product
+        function getCount(productId) {
+            const today = new Date().toDateString();
+            return new Promise((resolve) => {
+                const transaction = db.transaction(["counts"], "readonly");
+                const store = transaction.objectStore("counts");
+                const request = store.get(today);
+
+                request.onsuccess = () => {
+                    const data = request.result;
+                    resolve(data && data[productId] ? data[productId] : 0);
+                };
+                request.onerror = () => resolve(0);
+            });
+        }
+
+        // Update count for a product
+        async function updateCount(productId, change) {
+            const today = new Date().toDateString();
+            const transaction = db.transaction(["counts"], "readwrite");
+            const store = transaction.objectStore("counts");
+            const request = store.get(today);
+
+            request.onsuccess = async () => {
+                let data = request.result || { date: today };
+                const currentCount = data[productId] || 0;
+                const newCount = currentCount + change;
+
+                if (newCount < 0) return;
+
+                data[productId] = newCount;
+                await store.put(data);
+
+                document.getElementById(`counter-${productId}`).textContent = newCount;
+
+                if (change > 0) {
+                    const product = products.find(p => p.id === productId);
+                    showConfirmation(`${product.name} ordered successfully!`);
+                }
+            };
+        }
+
+        // Render statistics
+        async function renderStats() {
+            const statsContainer = document.getElementById('stats-container');
+            const emptyStats = document.getElementById('empty-stats');
+            const today = new Date().toDateString();
+            
+            const transaction = db.transaction(["counts"], "readonly");
+            const store = transaction.objectStore("counts");
+            const request = store.get(today);
+
+            request.onsuccess = () => {
+                const counts = request.result;
+                if (!counts || products.length === 0) {
+                    statsContainer.innerHTML = '';
+                    emptyStats.style.display = 'flex';
+                    return;
+                }
+
+                emptyStats.style.display = 'none';
+                let html = '<div class="card" style="margin-bottom: 15px;">';
+                let total = 0;
+
+                products.forEach(product => {
+                    const count = counts[product.id] || 0;
+                    total += count;
+                    if (count > 0) {
+                        html += `
+                            <div class="stats-item">
+                                <span class="stats-label">${product.name}</span>
+                                <span class="stats-value">${count}</span>
+                            </div>
+                        `;
+                    }
+                });
+
+                if (total === 0) {
+                    emptyStats.style.display = 'flex';
+                    statsContainer.innerHTML = '';
+                } else {
+                    html += `
+                        <div class="stats-item" style="margin-top: 15px; border-top: 1px solid #ddd; font-weight: 600;">
+                            <span class="stats-label">TOTAL ORDERS</span>
+                            <span class="stats-value">${total}</span>
+                        </div>
+                    `;
+                    html += '</div>';
+                    statsContainer.innerHTML = html;
+                }
+            };
+        }
+
+        // Reset statistics
+        async function resetStats() {
+            showConfirm('Are you sure you want to reset today\'s counts?', async () => {
+                const today = new Date().toDateString();
+                const transaction = db.transaction(["counts"], "readwrite");
+                const store = transaction.objectStore("counts");
+                await store.put({ date: today });
+
+                products.forEach(product => {
+                    const counterElement = document.getElementById(`counter-${product.id}`);
+                    if (counterElement) {
+                        counterElement.textContent = '0';
+                    }
+                });
+
+                renderStats();
+                showAlert('Today\'s counts have been reset');
+            });
+        }
+
+        // Switch between tabs
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            document.getElementById(`${tabName}-tab`).classList.add('active');
+            document.querySelector(`.tab[onclick="switchTab('${tabName}')"]`).classList.add('active');
+            
+            if (tabName === 'stats') {
+                renderStats();
+            }
+        }
+
+        // Show confirmation modal
+        function showConfirmation(message) {
+            document.getElementById('confirmation-message').textContent = message;
+            showModal('confirmation-modal');
+        }
+
+        // Show alert modal
+        function showAlert(message) {
+            document.getElementById('alert-message').textContent = message;
+            document.getElementById('alert-confirm-btn').onclick = function() {
+                hideModal('alert-modal');
+            };
+            document.getElementById('alert-cancel-btn').style.display = 'none';
+            showModal('alert-modal');
+        }
+
+        // Show confirmation dialog
+        function showConfirm(message, confirmCallback) {
+            document.getElementById('alert-message').textContent = message;
+            document.getElementById('alert-confirm-btn').onclick = function() {
+                hideModal('alert-modal');
+                if (confirmCallback) confirmCallback();
+            };
+            document.getElementById('alert-cancel-btn').style.display = 'block';
+            document.getElementById('alert-cancel-btn').onclick = function() {
+                hideModal('alert-modal');
+            };
+            showModal('alert-modal');
+        }
+
+        // Show modal
+        function showModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+        }
+
+        // Hide modal
+        function hideModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        // Initialize the app when page loads
+        window.onload = init;
+    </script>
+</body>
+</html>
