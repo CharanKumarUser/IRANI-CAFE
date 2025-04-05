@@ -1,53 +1,62 @@
-IRANI CAFE ☕
-A Taste of Persia in Every Sip & Bite
+# ☕ IRANI CAFE
 
-Welcome to Irani Cafe, where tradition meets taste! Experience authentic Persian-inspired beverages and snacks in a cozy, nostalgic setting.
+### A Taste of Persia in Every Sip & Bite
 
-✨ Our Menu
-☕ Hot Beverages
-Warm up with our rich, aromatic teas and coffees, brewed to perfection.
+Welcome to **Irani Cafe**, where tradition meets taste!  
+Experience authentic **Persian-inspired** beverages and snacks in a cozy, nostalgic setting.
 
-❄️ Irani Cold Coffee
-A refreshing twist on classic coffee—smooth, creamy, and perfectly chilled.
+---
 
-🥛 Lassi
-Creamy, frothy, and delicious—choose from sweet, salted, or flavored varieties.
+## ✨ Menu Highlights
 
-🍦 Milkshakes
-Thick, creamy, and indulgent—available in classic and exotic flavors.
+### ☕ Hot Beverages
+> Warm up with our rich, aromatic teas and coffees, brewed to perfection.
 
-🍹 Mocktails
-Vibrant, fruity, and refreshing—perfect for a cool sip on a warm day.
+### ❄️ Irani Cold Coffee
+> A refreshing twist on classic coffee—smooth, creamy, and perfectly chilled.
 
-🥤 Thickshakes
-Extra thick, extra delicious—our shakes are a treat for the senses.
+### 🥛 Lassi
+> Creamy, frothy, and delicious—choose from sweet, salted, or flavored varieties.
 
-🌟 Irani Specials
-Exclusive blends and secret recipes that make our cafe unique.
+### 🍦 Milkshakes
+> Thick, creamy, and indulgent—available in classic and exotic flavors.
 
-🍟 French Fries
-Crispy, golden, and perfectly seasoned—ideal for a quick snack.
+### 🍹 Mocktails
+> Vibrant, fruity, and refreshing—perfect for a cool sip on a warm day.
 
-🥐 Puffs
-Flaky, buttery, and stuffed with savory fillings—great with tea or coffee.
+### 🥤 Thickshakes
+> Extra thick, extra delicious—our shakes are a treat for the senses.
 
-🌶️ Samosa
-Spiced potato-filled pastry, crispy on the outside, soft on the inside.
+### 🌟 Irani Specials
+> Exclusive blends and secret recipes that make our cafe unique.
 
-🍪 Sandwich Biscuits
-Layered biscuits with sweet or savory fillings—perfect for a light bite.
+---
 
-🍜 Irani Maggi
-Our special twist on the classic Maggi—spiced and flavorful.
+## 🧂 Snacks
 
-🍞 Buns
-Soft, fluffy, and delicious—plain or stuffed with sweet/savory fillings.
+- 🍟 **French Fries** — Crispy, golden, and perfectly seasoned
+- 🥐 **Puffs** — Flaky, buttery, and stuffed with savory fillings
+- 🌶️ **Samosa** — Spiced potato-filled pastry, crispy on the outside
+- 🍪 **Sandwich Biscuits** — Sweet or savory layered biscuits
+- 🍜 **Irani Maggi** — Our special twist on classic Maggi
+- 🍞 **Buns** — Soft, fluffy, and available with sweet or savory fillings
 
-💡 Why Choose Us?
-✅ Authentic Persian-inspired flavors
-✅ Cozy, vintage cafe ambiance
-✅ Fresh ingredients, handcrafted with care
-✅ Perfect for solo visits, hangouts, or quick bites
+---
 
+## 💡 Why Choose Irani Cafe?
 
-Come, sip, and savor the taste of Irani Cafe! ❤️
+✅ Authentic Persian-inspired flavors  
+✅ Cozy, vintage cafe ambiance  
+✅ Fresh ingredients, handcrafted with care  
+✅ Perfect for solo visits, hangouts, or quick bites  
+
+---
+
+## 📍 Visit Us
+
+Come, sip, and savor the unique taste of **Irani Cafe**.  
+Whether you're here for a relaxing tea break or a flavorful snack, we’ve got something special for you. ❤️
+
+---
+
+> _Crafted with love for flavor and tradition._
