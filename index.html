@@ -3,16 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Persian Delight Cafe</title>
-    <!-- Font Awesome -->
+    <title>Irani Dude Cafe</title>
+    <!-- Place favicon.ico in the root directory -->
+    <link rel="shortcut icon" type="image/x-icon" href="https://iranidude.com/assets/img/favicon.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
         :root {
-            --primary: #D4AF37;
-            --secondary: #C1272D;
-            --dark: #3a3a3a;
+            --primary: #004e49;
+            --secondary: #d4af37;
+            --accent: #c1272d;
+            --dark: #2a2a2a;
             --light: #f8f8f8;
-            --shadow: 0 2px 10px rgba(0,0,0,0.1);
+            --shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            --border-radius: 12px;
         }
         * {
             box-sizing: border-box;
@@ -20,57 +25,74 @@
             padding: 0;
         }
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--light);
+            font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
             color: var(--dark);
             line-height: 1.6;
             padding-bottom: 20px;
         }
         .container {
             max-width: 100%;
-            padding: 0 10px;
+            padding: 0 15px;
         }
         header {
-            background: linear-gradient(135deg, var(--secondary), var(--primary));
+            background: var(--primary);
             color: white;
             padding: 15px 0;
             text-align: center;
-            box-shadow: var(--shadow);
-            margin-bottom: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 15px;
             position: relative;
+        }
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .logo {
+            height: 30px;
         }
         h1 {
             font-size: 1.5rem;
-            font-weight: 700;
+            font-weight: 600;
+            margin: 0;
         }
         h2 {
             font-size: 1.2rem;
             margin-bottom: 12px;
-            color: var(--secondary);
+            color: var(--primary);
         }
         .products-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
             margin-bottom: 15px;
         }
         .product-card {
             background: white;
-            border-radius: 8px;
-            padding: 8px;
+            border-radius: var(--border-radius);
+            padding: 10px;
             box-shadow: var(--shadow);
             position: relative;
             display: flex;
             flex-direction: column;
             height: 100%;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .product-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
         .product-img-container {
             position: relative;
             width: 100%;
             padding-top: 100%;
             overflow: hidden;
-            border-radius: 4px;
-            margin-bottom: 4px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            background: #f0f0f0;
         }
         .product-img {
             position: absolute;
@@ -79,34 +101,44 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
+            transition: transform 0.3s;
+        }
+        .product-img-container:hover .product-img {
+            transform: scale(1.05);
         }
         .product-info {
             flex: 1;
+            display: flex;
+            flex-direction: column;
         }
         .product-name {
             font-weight: 600;
-            font-size: 0.75rem;
-            margin-bottom: 3px;
+            font-size: 0.85rem;
+            margin-bottom: 5px;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
+            color: var(--dark);
         }
         .product-price {
-            color: var(--secondary);
+            color: var(--accent);
             font-weight: 700;
-            font-size: 0.75rem;
-            margin-bottom: 4px;
+            font-size: 0.85rem;
+            margin-bottom: 8px;
         }
         .counter-container {
             display: flex;
             align-items: center;
             justify-content: space-between;
             margin-top: auto;
+            background: #f5f5f5;
+            border-radius: 20px;
+            padding: 4px;
         }
         .counter-btn {
-            width: 20px;
-            height: 20px;
+            width: 24px;
+            height: 24px;
             border-radius: 50%;
             background: var(--primary);
             color: white;
@@ -116,89 +148,123 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
+            transition: background 0.2s;
+        }
+        .counter-btn:hover {
+            background: var(--secondary);
         }
         .counter-value {
             font-weight: 600;
-            min-width: 16px;
+            min-width: 20px;
             text-align: center;
-            font-size: 0.75rem;
+            font-size: 0.8rem;
         }
         .delete-btn {
             position: absolute;
-            top: 4px;
-            right: 4px;
-            background: rgba(220, 53, 69, 0.8);
+            top: 6px;
+            right: 6px;
+            background: rgba(220, 53, 69, 0.9);
             color: white;
             border: none;
-            width: 18px;
-            height: 18px;
+            width: 22px;
+            height: 22px;
             border-radius: 50%;
-            font-size: 0.6rem;
+            font-size: 0.7rem;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             z-index: 2;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        .product-card:hover .delete-btn {
+            opacity: 1;
         }
         .btn {
             display: block;
             width: 100%;
-            padding: 10px;
-            border-radius: 6px;
+            padding: 12px;
+            border-radius: var(--border-radius);
             border: none;
             font-weight: 600;
             cursor: pointer;
             text-align: center;
-            margin: 8px 0;
-            font-size: 0.9rem;
+            margin: 10px 0;
+            font-size: 0.95rem;
+            transition: all 0.2s;
         }
         .btn-primary {
             background: var(--primary);
             color: white;
         }
+        .btn-primary:hover {
+            background: #003a36;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
         .btn-secondary {
             background: var(--secondary);
             color: white;
         }
+        .btn-secondary:hover {
+            background: #c49d2a;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
         .form-group {
-            margin-bottom: 12px;
+            margin-bottom: 15px;
         }
         .form-group label {
             display: block;
-            margin-bottom: 4px;
+            margin-bottom: 6px;
             font-weight: 500;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
+            color: var(--dark);
         }
         .form-control {
             width: 100%;
-            padding: 8px;
+            padding: 10px;
             border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 0.9rem;
+            border-radius: var(--border-radius);
+            font-size: 0.95rem;
+            transition: border-color 0.2s;
+        }
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
         }
         .image-upload {
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin: 12px 0;
+            margin: 15px 0;
         }
         .image-upload-btn {
             background: #f0f0f0;
             color: var(--dark);
-            padding: 8px 12px;
-            border-radius: 5px;
-            border: 1px dashed #ccc;
+            padding: 12px;
+            border-radius: var(--border-radius);
+            border: 2px dashed #ccc;
             cursor: pointer;
             text-align: center;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             width: 100%;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        .image-upload-btn:hover {
+            background: #e8e8e8;
+            border-color: var(--primary);
         }
         .image-preview-container {
             position: relative;
             width: 100%;
             padding-top: 100%;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            background: #f0f0f0;
         }
         .image-preview {
             position: absolute;
@@ -207,8 +273,8 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            border-radius: 6px;
-            border: 1px dashed #ccc;
+            border-radius: var(--border-radius);
+            border: 1px solid #eee;
             display: none;
         }
         .modal {
@@ -217,7 +283,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0,0,0,0.5);
+            background: rgba(0, 0, 0, 0.5);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -232,12 +298,13 @@
         }
         .modal-content {
             background: white;
-            border-radius: 10px;
-            padding: 15px;
+            border-radius: var(--border-radius);
+            padding: 20px;
             width: 90%;
             max-width: 350px;
             transform: translateY(20px);
             transition: transform 0.3s;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
         }
         .modal.active .modal-content {
             transform: translateY(0);
@@ -246,25 +313,30 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 12px;
+            margin-bottom: 15px;
         }
         .modal-title {
-            font-size: 1.1rem;
-            color: var(--secondary);
+            font-size: 1.2rem;
+            color: var(--primary);
+            font-weight: 600;
         }
         .close-btn {
             background: none;
             border: none;
-            font-size: 1.2rem;
+            font-size: 1.5rem;
             cursor: pointer;
             color: var(--dark);
+            transition: color 0.2s;
+        }
+        .close-btn:hover {
+            color: var(--accent);
         }
         .stats-item {
             display: flex;
             justify-content: space-between;
-            padding: 8px 0;
+            padding: 10px 0;
             border-bottom: 1px solid #eee;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
         }
         .stats-item:last-child {
             border-bottom: none;
@@ -274,62 +346,186 @@
         }
         .stats-value {
             font-weight: 700;
-            color: var(--secondary);
+            color: var(--primary);
         }
         .empty-state {
             text-align: center;
-            padding: 20px 0;
+            padding: 30px 0;
             color: #777;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             grid-column: 1 / -1;
         }
         .tabs {
             display: flex;
-            margin-bottom: 12px;
-            border-bottom: 1px solid #ddd;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #eee;
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 5px;
+            box-shadow: var(--shadow);
         }
         .tab {
-            padding: 8px 12px;
+            padding: 10px 15px;
             cursor: pointer;
             border-bottom: 3px solid transparent;
             font-size: 0.9rem;
             white-space: nowrap;
             flex: 1;
             text-align: center;
+            transition: all 0.2s;
+            border-radius: 6px;
+        }
+        .tab:hover {
+            background: rgba(0, 78, 73, 0.1);
         }
         .tab.active {
             border-bottom: 3px solid var(--primary);
             font-weight: 600;
-            color: var(--secondary);
+            color: var(--primary);
+            background: rgba(0, 78, 73, 0.05);
         }
         .tab-content {
             display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(5px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
         .tab-content.active {
             display: block;
         }
         .fa-icon {
-            margin-right: 4px;
-            font-size: 0.9em;
+            margin-right: 6px;
+            font-size: 0.95em;
         }
         .file-size-warning {
-            color: var(--secondary);
-            font-size: 0.75rem;
-            margin-top: -6px;
-            margin-bottom: 8px;
+            color: var(--accent);
+            font-size: 0.8rem;
+            margin-top: -5px;
+            margin-bottom: 10px;
             display: none;
         }
+        .search-container {
+            margin-bottom: 15px;
+            position: relative;
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 10px;
+            box-shadow: var(--shadow);
+        }
+        .search-input {
+            width: 100%;
+            padding: 10px 35px 10px 10px;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            font-size: 0.95rem;
+        }
+        .search-icon {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #777;
+        }
+        .category-section {
+            margin-bottom: 20px;
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 15px;
+            box-shadow: var(--shadow);
+        }
+        .category-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 10px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--secondary);
+            display: flex;
+            align-items: center;
+        }
+        .category-title i {
+            margin-right: 8px;
+            color: var(--secondary);
+        }
+        .total-orders-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+        .total-orders-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin: 10px 0;
+        }
+        .total-orders-label {
+            font-size: 0.9rem;
+            color: #777;
+        }
+        .chart-container {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: var(--shadow);
+        }
+        .chart-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        .price-history {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: var(--shadow);
+        }
+        .price-history-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+            font-size: 0.9rem;
+        }
+        .price-history-item:last-child {
+            border-bottom: none;
+        }
+        @media (min-width: 768px) {
+            .container {
+                max-width: 750px;
+                margin: 0 auto;
+            }
+            .products-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
     </style>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <header>
         <div class="container">
-            <h1><i class="fas fa-utensils fa-icon"></i>Irani Cafe</h1>
+            <div class="logo-container">
+                <img src="https://iranidude.com/assets/img/logo.png" alt="Persian Delight Logo" class="logo">
+            </div>
         </div>
     </header>
-
     <div class="container">
         <div class="tabs">
             <div class="tab active" onclick="switchTab('menu')">
@@ -342,17 +538,19 @@
                 <i class="fas fa-plus-circle fa-icon"></i>Add
             </div>
         </div>
-
         <div id="menu-tab" class="tab-content active">
-            <div class="products-grid" id="products-list">
-                <!-- Products will be loaded here -->
+            <div class="search-container">
+                <input type="text" id="search-input" class="search-input" placeholder="Search menu items...">
+                <i class="fas fa-search search-icon"></i>
+            </div>
+            <div id="products-list">
+                <!-- Products will be loaded here by category -->
             </div>
             <div id="empty-menu" class="empty-state">
-                <i class="fas fa-utensils" style="font-size: 1.8rem; margin-bottom: 8px;"></i>
+                <i class="fas fa-utensils" style="font-size: 2rem; margin-bottom: 10px; color: var(--primary);"></i>
                 <p>No items in menu. Add some products!</p>
             </div>
         </div>
-
         <div id="stats-tab" class="tab-content">
             <div id="stats-container">
                 <!-- Stats will be loaded here -->
@@ -360,30 +558,52 @@
             <button class="btn btn-secondary" onclick="resetStats()">
                 <i class="fas fa-sync-alt fa-icon"></i>Reset Today's Counts
             </button>
+            <button class="btn btn-primary" onclick="downloadStatsPDF()">
+                <i class="fas fa-download fa-icon"></i>Download Stats PDF
+            </button>
             <div id="empty-stats" class="empty-state">
-                <i class="fas fa-chart-pie" style="font-size: 1.8rem; margin-bottom: 8px;"></i>
+                <i class="fas fa-chart-pie" style="font-size: 2rem; margin-bottom: 10px; color: var(--primary);"></i>
                 <p>No statistics available for today</p>
             </div>
         </div>
-
         <div id="add-tab" class="tab-content">
             <div class="form-group">
                 <label for="item-name"><i class="fas fa-tag fa-icon"></i>Item Name</label>
                 <input type="text" id="item-name" class="form-control" placeholder="e.g. Chelo Kabab">
             </div>
             <div class="form-group">
-                <label for="item-price"><i class="fas fa-dollar-sign fa-icon"></i>Price ($)</label>
-                <input type="text" id="item-price" class="form-control" placeholder="e.g. 12.99">
+                <label for="item-price"><i class="fas fa-rupee-sign fa-icon"></i>Price (₹)</label>
+                <input type="number" id="item-price" class="form-control" placeholder="e.g. 299" min="0"
+                    step="1">
+            </div>
+            <div class="form-group">
+                <label for="item-category"><i class="fas fa-list-alt fa-icon"></i>Category</label>
+                <select id="item-category" class="form-control">
+                    <option value="Hot Beverages">Hot Beverages</option>
+                    <option value="Iranis Cold Coffee">Iranis Cold Coffee</option>
+                    <option value="Lasi">Lasi</option>
+                    <option value="Milkshakes">Milkshakes</option>
+                    <option value="Mocktails">Mocktails</option>
+                    <option value="Thickshakes">Thickshakes</option>
+                    <option value="Iranis Special">Iranis Special</option>
+                    <option value="French Fries">French Fries</option>
+                    <option value="Puffs">Puffs</option>
+                    <option value="Samosa">Samosa</option>
+                    <option value="Sandwich Biscuits">Sandwich Biscuits</option>
+                    <option value="Iranis Maggi">Iranis Maggi</option>
+                    <option value="Buns">Buns</option>
+                </select>
             </div>
             <div class="form-group">
                 <label><i class="fas fa-camera fa-icon"></i>Item Image</label>
                 <div class="image-upload">
                     <input type="file" id="image-upload" accept="image/*" style="display: none;">
-                    <button type="button" class="image-upload-btn" onclick="document.getElementById('image-upload').click()">
+                    <button type="button" class="image-upload-btn"
+                        onclick="document.getElementById('image-upload').click()">
                         <i class="fas fa-camera fa-icon"></i>Take Photo or Choose from Gallery
                     </button>
                     <div class="file-size-warning" id="file-size-warning">
-                        Maximum image size is 5MB
+                        <i class="fas fa-exclamation-circle"></i> Maximum image size is 5MB
                     </div>
                     <div class="image-preview-container">
                         <img id="image-preview" class="image-preview" alt="Image preview">
@@ -395,30 +615,26 @@
             </button>
         </div>
     </div>
-
-    <!-- Order Confirmation Modal -->
     <div class="modal" id="confirmation-modal">
         <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title"><i class="fas fa-check-circle fa-icon"></i>Order Confirmation</h3>
                 <button class="close-btn" onclick="hideModal('confirmation-modal')">×</button>
             </div>
-            <p id="confirmation-message"></p>
+            <p id="confirmation-message" style="margin-bottom: 15px;"></p>
             <button class="btn btn-primary" onclick="hideModal('confirmation-modal')">
                 <i class="fas fa-thumbs-up fa-icon"></i>OK
             </button>
         </div>
     </div>
-
-    <!-- Alert Modal -->
     <div class="modal" id="alert-modal">
         <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title"><i class="fas fa-exclamation-circle fa-icon"></i>Notification</h3>
                 <button class="close-btn" onclick="hideModal('alert-modal')">×</button>
             </div>
-            <p id="alert-message"></p>
-            <div style="display: flex; gap: 8px;">
+            <p id="alert-message" style="margin-bottom: 15px;"></p>
+            <div style="display: flex; gap: 10px;">
                 <button class="btn btn-primary" id="alert-confirm-btn">
                     <i class="fas fa-check fa-icon"></i>OK
                 </button>
@@ -428,99 +644,125 @@
             </div>
         </div>
     </div>
-
     <script>
-        // IndexedDB setup
+        const {
+            jsPDF
+        } = window.jspdf;
         const dbName = "PersianDelightDB";
-        const dbVersion = 1;
+        const dbVersion = 3;
         let db;
-
-        // Global variables
         let products = [];
         let currentImage = null;
-        const MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5MB in bytes
-
-        // Initialize IndexedDB
+        const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
+        let categoryChart = null;
+        let salesChart = null;
         function initDB() {
             return new Promise((resolve, reject) => {
                 const request = indexedDB.open(dbName, dbVersion);
-
                 request.onerror = () => reject("Error opening database");
-                
                 request.onsuccess = (event) => {
                     db = event.target.result;
                     resolve();
                 };
-
                 request.onupgradeneeded = (event) => {
                     db = event.target.result;
-                    db.createObjectStore("products", { keyPath: "id" });
-                    db.createObjectStore("counts", { keyPath: "date" });
+                    if (!db.objectStoreNames.contains("products")) {
+                        db.createObjectStore("products", {
+                            keyPath: "id"
+                        });
+                    }
+                    if (!db.objectStoreNames.contains("counts")) {
+                        db.createObjectStore("counts", {
+                            keyPath: "date"
+                        });
+                    }
+                    if (!db.objectStoreNames.contains("priceHistory")) {
+                        db.createObjectStore("priceHistory", {
+                            keyPath: "id",
+                            autoIncrement: true
+                        });
+                    }
                 };
             });
         }
-
-        // Initialize the app
         async function init() {
             await initDB();
             await loadProducts();
             renderMenu();
             setupImageUpload();
             setupAddProductButton();
+            setupSearch();
         }
-
-        // Load products from IndexedDB
         async function loadProducts() {
             return new Promise((resolve) => {
                 const transaction = db.transaction(["products"], "readonly");
                 const store = transaction.objectStore("products");
                 const request = store.getAll();
-
                 request.onsuccess = () => {
-                    products = request.result;
+                    products = request.result || [];
                     resolve();
                 };
                 request.onerror = () => {
                     console.error("Error loading products");
+                    products = [];
                     resolve();
                 };
             });
         }
-
-        // Save product to IndexedDB
         async function saveProduct(product) {
             return new Promise((resolve) => {
                 const transaction = db.transaction(["products"], "readwrite");
                 const store = transaction.objectStore("products");
                 const request = store.put(product);
-
                 request.onsuccess = () => resolve();
                 request.onerror = () => console.error("Error saving product");
             });
         }
-
-        // Delete product from IndexedDB
         async function deleteProductFromDB(productId) {
             return new Promise((resolve) => {
                 const transaction = db.transaction(["products"], "readwrite");
                 const store = transaction.objectStore("products");
                 const request = store.delete(productId);
-
                 request.onsuccess = () => resolve();
                 request.onerror = () => console.error("Error deleting product");
             });
         }
-
-        // Setup image upload functionality
+        async function recordPriceChange(productId, oldPrice, newPrice) {
+            return new Promise((resolve) => {
+                const transaction = db.transaction(["priceHistory"], "readwrite");
+                const store = transaction.objectStore("priceHistory");
+                const record = {
+                    productId: productId,
+                    oldPrice: oldPrice,
+                    newPrice: newPrice,
+                    date: new Date().toISOString()
+                };
+                const request = store.add(record);
+                request.onsuccess = () => resolve();
+                request.onerror = () => console.error("Error recording price change");
+            });
+        }
+        async function getPriceHistory(productId) {
+            return new Promise((resolve) => {
+                const transaction = db.transaction(["priceHistory"], "readonly");
+                const store = transaction.objectStore("priceHistory");
+                const index = store.index("productId");
+                const request = index.getAll(productId);
+                request.onsuccess = () => {
+                    resolve(request.result || []);
+                };
+                request.onerror = () => {
+                    console.error("Error loading price history");
+                    resolve([]);
+                };
+            });
+        }
         function setupImageUpload() {
             const uploadInput = document.getElementById('image-upload');
             const sizeWarning = document.getElementById('file-size-warning');
-            
             uploadInput.addEventListener('change', function(e) {
                 const file = e.target.files[0];
-                
                 if (!file) return;
-                
                 if (file.size > MAX_IMAGE_SIZE) {
                     sizeWarning.style.display = 'block';
                     currentImage = null;
@@ -528,9 +770,7 @@
                     showAlert('Image size must be less than 5MB');
                     return;
                 }
-                
                 sizeWarning.style.display = 'none';
-                
                 const reader = new FileReader();
                 reader.onload = function(event) {
                     currentImage = event.target.result;
@@ -541,81 +781,140 @@
                 reader.readAsDataURL(file);
             });
         }
-
-        // Setup add product button
         function setupAddProductButton() {
             document.getElementById('add-product-btn').addEventListener('click', addProduct);
         }
-
-        // Render the menu
-        function renderMenu() {
+        function setupSearch() {
+            const searchInput = document.getElementById('search-input');
+            searchInput.addEventListener('input', function(e) {
+                renderMenu(e.target.value.toLowerCase());
+            });
+        }
+        function renderMenu(searchTerm = '') {
             const productsList = document.getElementById('products-list');
             const emptyMenu = document.getElementById('empty-menu');
-            
             if (products.length === 0) {
                 productsList.innerHTML = '';
                 emptyMenu.style.display = 'flex';
                 return;
             }
-            
+            let filteredProducts = products;
+            if (searchTerm) {
+                filteredProducts = products.filter(product =>
+                    product.name.toLowerCase().includes(searchTerm) ||
+                    product.category.toLowerCase().includes(searchTerm)
+                );
+            }
+            const categories = [...new Set(filteredProducts.map(p => p.category))];
             emptyMenu.style.display = 'none';
             productsList.innerHTML = '';
-            
-            products.forEach(product => {
-                const productElement = document.createElement('div');
-                productElement.className = 'product-card';
-                productElement.innerHTML = `
-                    <button class="delete-btn" onclick="deleteProduct(${product.id})" title="Delete">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                    <div class="product-img-container">
-                        <img src="${product.image}" class="product-img" alt="${product.name}">
-                    </div>
-                    <div class="product-info">
-                        <div class="product-name">${product.name}</div>
-                        <div class="product-price">$${product.price}</div>
-                        <div class="counter-container">
-                            <button class="counter-btn" onclick="updateCount(${product.id}, -1)" title="Decrease">
-                                <i class="fas fa-minus"></i>
+            if (filteredProducts.length === 0) {
+                productsList.innerHTML =
+                    '<div class="empty-state"><i class="fas fa-search" style="font-size: 2rem; margin-bottom: 10px; color: var(--primary);"></i><p>No matching items found</p></div>';
+                return;
+            }
+            categories.forEach(category => {
+                const categoryProducts = filteredProducts.filter(p => p.category === category);
+                if (categoryProducts.length > 0) {
+                    const categorySection = document.createElement('div');
+                    categorySection.className = 'category-section';
+                    const categoryTitle = document.createElement('div');
+                    categoryTitle.className = 'category-title';
+                    categoryTitle.innerHTML = `<i class="fas ${getCategoryIcon(category)}"></i>${category}`;
+                    const grid = document.createElement('div');
+                    grid.className = 'products-grid';
+                    categoryProducts.forEach(product => {
+                        const productElement = document.createElement('div');
+                        productElement.className = 'product-card';
+                        productElement.innerHTML = `
+                            <button class="delete-btn" onclick="deleteProduct(${product.id})" title="Delete">
+                                <i class="fas fa-trash"></i>
                             </button>
-                            <div class="counter-value" id="counter-${product.id}">${product.count || 0}</div>
-                            <button class="counter-btn" onclick="updateCount(${product.id}, 1)" title="Increase">
-                                <i class="fas fa-plus"></i>
-                            </button>
-                        </div>
-                    </div>
-                `;
-                productsList.appendChild(productElement);
+                            <div class="product-img-container" onclick="updateCount(${product.id}, 1)">
+                                <img src="${product.image || 'https://via.placeholder.com/300?text=No+Image'}" class="product-img" alt="${product.name}">
+                            </div>
+                            <div class="product-info">
+                                <div class="product-name">${product.name}</div>
+                                <div class="product-price">₹${parseFloat(product.price).toFixed(2)}</div>
+                                <div class="counter-container">
+                                    <button class="counter-btn" onclick="event.stopPropagation(); updateCount(${product.id}, -1)" title="Decrease">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                    <div class="counter-value" id="counter-${product.id}">0</div>
+                                    <button class="counter-btn" onclick="event.stopPropagation(); updateCount(${product.id}, 1)" title="Increase">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                        grid.appendChild(productElement);
+                    });
+                    categorySection.appendChild(categoryTitle);
+                    categorySection.appendChild(grid);
+                    productsList.appendChild(categorySection);
+                }
             });
+            // Load counts for all products after rendering
+            loadAllCounts();
         }
-
-        // Add a new product
+        function getCategoryIcon(category) {
+            const icons = {
+                'Hot Beverages': 'fa-coffee',
+                'Iranis Cold Coffee': 'fa-mug-hot',
+                'Lasi': 'fa-blender',
+                'Milkshakes': 'fa-glass-whiskey',
+                'Mocktails': 'fa-cocktail',
+                'Thickshakes': 'fa-ice-cream',
+                'Iranis Special': 'fa-star',
+                'French Fries': 'fa-cut',
+                'Puffs': 'fa-pastafarianism',
+                'Samosa': 'fa-drumstick-bite',
+                'Sandwich Biscuits': 'fa-cookie',
+                'Iranis Maggi': 'fa-utensils',
+                'Buns': 'fa-bread-slice'
+            };
+            return icons[category] || 'fa-utensils';
+        }
+        async function loadAllCounts() {
+            const today = new Date().toDateString();
+            const transaction = db.transaction(["counts"], "readonly");
+            const store = transaction.objectStore("counts");
+            const request = store.get(today);
+            request.onsuccess = () => {
+                const counts = request.result || {};
+                products.forEach(product => {
+                    const count = counts[product.id] || 0;
+                    const counterElement = document.getElementById(`counter-${product.id}`);
+                    if (counterElement) {
+                        counterElement.textContent = count;
+                    }
+                });
+            };
+        }
         async function addProduct() {
             const name = document.getElementById('item-name').value.trim();
             const price = document.getElementById('item-price').value.trim();
-            
-            if (!name || !price || !currentImage) {
-                showAlert('Please fill all fields and add an image');
+            const category = document.getElementById('item-category').value;
+            if (!name || !price) {
+                showAlert('Please fill all required fields');
                 return;
             }
-            
             if (isNaN(parseFloat(price))) {
                 showAlert('Please enter a valid price');
                 return;
             }
-            
             const newId = products.length > 0 ? Math.max(...products.map(p => p.id)) + 1 : 1;
             const newProduct = {
                 id: newId,
                 name: name,
                 price: parseFloat(price).toFixed(2),
-                image: currentImage
+                image: currentImage || 'https://via.placeholder.com/300?text=No+Image',
+                category: category,
+                createdAt: new Date().toISOString()
             };
-            
             await saveProduct(newProduct);
             products.push(newProduct);
             renderMenu();
-            
             // Reset form
             document.getElementById('item-name').value = '';
             document.getElementById('item-price').value = '';
@@ -623,12 +922,10 @@
             document.getElementById('image-preview').src = '';
             currentImage = null;
             document.getElementById('file-size-warning').style.display = 'none';
-            
+            document.getElementById('image-upload').value = '';
             showAlert('Product added successfully!');
             switchTab('menu');
         }
-
-        // Delete a product
         async function deleteProduct(productId) {
             showConfirm('Are you sure you want to delete this item?', async () => {
                 await deleteProductFromDB(productId);
@@ -637,121 +934,215 @@
                 showAlert('Item deleted successfully');
             });
         }
-
-        // Get count for a product
-        function getCount(productId) {
-            const today = new Date().toDateString();
-            return new Promise((resolve) => {
-                const transaction = db.transaction(["counts"], "readonly");
-                const store = transaction.objectStore("counts");
-                const request = store.get(today);
-
-                request.onsuccess = () => {
-                    const data = request.result;
-                    resolve(data && data[productId] ? data[productId] : 0);
-                };
-                request.onerror = () => resolve(0);
-            });
-        }
-
-        // Update count for a product
         async function updateCount(productId, change) {
             const today = new Date().toDateString();
             const transaction = db.transaction(["counts"], "readwrite");
             const store = transaction.objectStore("counts");
             const request = store.get(today);
-
             request.onsuccess = async () => {
-                let data = request.result || { date: today };
+                let data = request.result || {
+                    date: today
+                };
                 const currentCount = data[productId] || 0;
-                const newCount = currentCount + change;
-
-                if (newCount < 0) return;
-
+                const newCount = Math.max(0, currentCount + change);
                 data[productId] = newCount;
                 await store.put(data);
-
                 document.getElementById(`counter-${productId}`).textContent = newCount;
-
                 if (change > 0) {
                     const product = products.find(p => p.id === productId);
                     showConfirmation(`${product.name} ordered successfully!`);
                 }
             };
         }
-
-        // Render statistics
         async function renderStats() {
             const statsContainer = document.getElementById('stats-container');
             const emptyStats = document.getElementById('empty-stats');
             const today = new Date().toDateString();
-            
             const transaction = db.transaction(["counts"], "readonly");
             const store = transaction.objectStore("counts");
             const request = store.get(today);
-
-            request.onsuccess = () => {
+            request.onsuccess = async () => {
                 const counts = request.result;
                 if (!counts || products.length === 0) {
                     statsContainer.innerHTML = '';
                     emptyStats.style.display = 'flex';
                     return;
                 }
-
                 emptyStats.style.display = 'none';
-                let html = '<div class="card" style="margin-bottom: 15px;">';
+                let html = '';
                 let total = 0;
-
+                let totalRevenue = 0;
+                let categoryTotals = {};
+                let categoryRevenues = {};
+                // Calculate totals per category
                 products.forEach(product => {
                     const count = counts[product.id] || 0;
                     total += count;
-                    if (count > 0) {
-                        html += `
-                            <div class="stats-item">
-                                <span class="stats-label">${product.name}</span>
-                                <span class="stats-value">${count}</span>
-                            </div>
-                        `;
+                    totalRevenue += count * parseFloat(product.price);
+                    if (!categoryTotals[product.category]) {
+                        categoryTotals[product.category] = 0;
+                        categoryRevenues[product.category] = 0;
                     }
+                    categoryTotals[product.category] += count;
+                    categoryRevenues[product.category] += count * parseFloat(product.price);
                 });
-
                 if (total === 0) {
                     emptyStats.style.display = 'flex';
                     statsContainer.innerHTML = '';
-                } else {
-                    html += `
-                        <div class="stats-item" style="margin-top: 15px; border-top: 1px solid #ddd; font-weight: 600;">
-                            <span class="stats-label">TOTAL ORDERS</span>
-                            <span class="stats-value">${total}</span>
-                        </div>
-                    `;
-                    html += '</div>';
-                    statsContainer.innerHTML = html;
+                    return;
                 }
+                // Add total orders card
+                html += `
+                    <div class="total-orders-card">
+                        <div class="total-orders-label">TOTAL ORDERS TODAY</div>
+                        <div class="total-orders-number">${total}</div>
+                        <div class="total-orders-label">TOTAL REVENUE: ₹${totalRevenue.toFixed(2)}</div>
+                    </div>
+                `;
+                // Add charts
+                html += `
+                    <div class="chart-container">
+                        <div class="chart-title">Orders by Category</div>
+                        <canvas id="categoryChart" height="250"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <div class="chart-title">Revenue by Category</div>
+                        <canvas id="salesChart" height="250"></canvas>
+                    </div>
+                `;
+                // Add category breakdown
+                Object.keys(categoryTotals).sort((a, b) => categoryTotals[b] - categoryTotals[a]).forEach(
+                    category => {
+                        const categoryTotal = categoryTotals[category];
+                        const categoryRevenue = categoryRevenues[category];
+                        if (categoryTotal > 0) {
+                            html += `
+                            <div class="category-section">
+                                <div class="category-title">
+                                    <i class="fas ${getCategoryIcon(category)}"></i>${category}
+                                </div>
+                                <div style="margin-top: 10px;">
+                        `;
+                            // Add products in this category with counts
+                            products.filter(p => p.category === category).forEach(product => {
+                                const count = counts[product.id] || 0;
+                                if (count > 0) {
+                                    html += `
+                                    <div class="stats-item">
+                                        <span class="stats-label">${product.name}</span>
+                                        <span class="stats-value">${count} (₹${(count * parseFloat(product.price)).toFixed(2)})</span>
+                                    </div>
+                                `;
+                                }
+                            });
+                            // Add category total
+                            html += `
+                                    <div class="stats-item" style="margin-top: 10px; border-top: 1px solid #eee; font-weight: 600;">
+                                        <span class="stats-label">${category} TOTAL</span>
+                                        <span class="stats-value">${categoryTotal} (₹${categoryRevenue.toFixed(2)})</span>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        }
+                    });
+                statsContainer.innerHTML = html;
+                // Destroy existing charts if they exist
+                if (categoryChart) categoryChart.destroy();
+                if (salesChart) salesChart.destroy();
+                // Render category chart
+                const ctxCategory = document.getElementById('categoryChart').getContext('2d');
+                categoryChart = new Chart(ctxCategory, {
+                    type: 'bar',
+                    data: {
+                        labels: Object.keys(categoryTotals),
+                        datasets: [{
+                            label: 'Orders',
+                            data: Object.values(categoryTotals),
+                            backgroundColor: 'rgba(0, 78, 73, 0.7)',
+                            borderColor: 'rgba(0, 78, 73, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Number of Orders'
+                                }
+                            },
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Categories'
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        }
+                    }
+                });
+                // Render sales chart
+                const ctxSales = document.getElementById('salesChart').getContext('2d');
+                salesChart = new Chart(ctxSales, {
+                    type: 'pie',
+                    data: {
+                        labels: Object.keys(categoryRevenues),
+                        datasets: [{
+                            data: Object.values(categoryRevenues),
+                            backgroundColor: [
+                                'rgba(0, 78, 73, 0.7)',
+                                'rgba(212, 175, 55, 0.7)',
+                                'rgba(193, 39, 45, 0.7)',
+                                'rgba(0, 128, 128, 0.7)',
+                                'rgba(255, 99, 71, 0.7)',
+                                'rgba(147, 112, 219, 0.7)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'right',
+                                labels: {
+                                    boxWidth: 20
+                                }
+                            },
+                            title: {
+                                display: false
+                            }
+                        }
+                    }
+                });
             };
         }
-
-        // Reset statistics
         async function resetStats() {
-            showConfirm('Are you sure you want to reset today\'s counts?', async () => {
+            showConfirm('Are you sure you want to reset today\'s counts? This cannot be undone.', async () => {
                 const today = new Date().toDateString();
                 const transaction = db.transaction(["counts"], "readwrite");
                 const store = transaction.objectStore("counts");
-                await store.put({ date: today });
-
+                await store.put({
+                    date: today
+                });
+                // Update all counters to 0
                 products.forEach(product => {
                     const counterElement = document.getElementById(`counter-${product.id}`);
                     if (counterElement) {
                         counterElement.textContent = '0';
                     }
                 });
-
                 renderStats();
                 showAlert('Today\'s counts have been reset');
             });
         }
-
-        // Switch between tabs
         function switchTab(tabName) {
             document.querySelectorAll('.tab-content').forEach(tab => {
                 tab.classList.remove('active');
@@ -759,22 +1150,18 @@
             document.querySelectorAll('.tab').forEach(tab => {
                 tab.classList.remove('active');
             });
-            
             document.getElementById(`${tabName}-tab`).classList.add('active');
             document.querySelector(`.tab[onclick="switchTab('${tabName}')"]`).classList.add('active');
-            
             if (tabName === 'stats') {
                 renderStats();
+            } else if (tabName === 'menu') {
+                renderMenu();
             }
         }
-
-        // Show confirmation modal
         function showConfirmation(message) {
             document.getElementById('confirmation-message').textContent = message;
             showModal('confirmation-modal');
         }
-
-        // Show alert modal
         function showAlert(message) {
             document.getElementById('alert-message').textContent = message;
             document.getElementById('alert-confirm-btn').onclick = function() {
@@ -783,33 +1170,196 @@
             document.getElementById('alert-cancel-btn').style.display = 'none';
             showModal('alert-modal');
         }
-
-        // Show confirmation dialog
         function showConfirm(message, confirmCallback) {
             document.getElementById('alert-message').textContent = message;
             document.getElementById('alert-confirm-btn').onclick = function() {
                 hideModal('alert-modal');
-                if (confirmCallback) confirmCallback();
+                confirmCallback();
             };
-            document.getElementById('alert-cancel-btn').style.display = 'block';
+            document.getElementById('alert-cancel-btn').style.display = 'inline-block';
             document.getElementById('alert-cancel-btn').onclick = function() {
                 hideModal('alert-modal');
             };
             showModal('alert-modal');
         }
-
-        // Show modal
         function showModal(modalId) {
-            document.getElementById(modalId).classList.add('active');
+            const modal = document.getElementById(modalId);
+            modal.classList.add('active');
         }
-
-        // Hide modal
         function hideModal(modalId) {
-            document.getElementById(modalId).classList.remove('active');
+            const modal = document.getElementById(modalId);
+            modal.classList.remove('active');
         }
-
-        // Initialize the app when page loads
-        window.onload = init;
+        async function downloadStatsPDF() {
+            const today = new Date().toDateString();
+            const transaction = db.transaction(["counts"], "readonly");
+            const store = transaction.objectStore("counts");
+            const request = store.get(today);
+            request.onsuccess = async () => {
+                const counts = request.result || {
+                    date: today
+                };
+                if (!counts || products.length === 0) {
+                    showAlert('No statistics available to download');
+                    return;
+                }
+                const doc = new jsPDF({
+                    orientation: 'portrait',
+                    unit: 'mm',
+                    format: 'a4'
+                });
+                let yPos = 20;
+                const pageWidth = doc.internal.pageSize.width;
+                const margin = 15;
+                const lineHeight = 8;
+                // Set font to Helvetica (kept for consistency, though not critical for INR)
+                doc.setFont("Helvetica");
+                // Header with Total Orders and Total Revenue
+                doc.setFillColor(0, 78, 73);
+                doc.rect(0, 0, pageWidth, 45, 'F');
+                doc.setFontSize(24);
+                doc.setTextColor(255);
+                doc.text('Irani Dude', pageWidth / 2, 15, {
+                    align: 'center'
+                });
+                doc.setFontSize(14);
+                doc.text(`Daily Statistics - ${today}`, pageWidth / 2, 28, {
+                    align: 'center'
+                });
+                // Calculate totals for header
+                let totalOrders = 0;
+                let totalRevenue = 0;
+                let categoryTotals = {};
+                let categoryRevenues = {};
+                products.forEach(product => {
+                    const count = counts[product.id] || 0;
+                    const revenue = count * parseFloat(product.price);
+                    totalOrders += count;
+                    totalRevenue += revenue;
+                    if (!categoryTotals[product.category]) {
+                        categoryTotals[product.category] = 0;
+                        categoryRevenues[product.category] = 0;
+                    }
+                    categoryTotals[product.category] += count;
+                    categoryRevenues[product.category] += revenue;
+                });
+                doc.setFontSize(12);
+                doc.setFont("helvetica", "bold"); // Set bold font
+                doc.text(`Total Orders: ${totalOrders}`, margin, 38);
+                const revenueText = `Total Revenue: INR ${totalRevenue.toFixed(2)}`;
+                doc.text(revenueText, pageWidth - margin, 38, {
+                    align: 'right'
+                });
+                yPos += 35;
+                // Category Details in Table Format
+                doc.setFontSize(18);
+                doc.setTextColor(0, 78, 73);
+                doc.text('Category Breakdown', margin, yPos);
+                doc.setLineWidth(0.8);
+                doc.setDrawColor(0, 78, 73);
+                doc.line(margin, yPos + 3, margin + 65, yPos + 3);
+                yPos += 15;
+                const categories = Object.keys(categoryTotals).sort((a, b) => categoryTotals[b] -
+                    categoryTotals[a]);
+                for (const category of categories) {
+                    const categoryTotal = categoryTotals[category];
+                    const categoryRevenue = categoryRevenues[category];
+                    if (categoryTotal > 0) {
+                        if (yPos > 230) {
+                            doc.addPage();
+                            yPos = 20;
+                        }
+                        // Category Title
+                        doc.setFontSize(16);
+                        doc.setTextColor(0, 78, 73);
+                        doc.text(category, margin, yPos);
+                        yPos += 10;
+                        // Table Header
+                        doc.setFillColor(0, 78, 73);
+                        doc.rect(margin, yPos - 6, pageWidth - 2 * margin, 8, 'F');
+                        doc.setFontSize(12);
+                        doc.setTextColor(255);
+                        doc.text('Product', margin + 5, yPos);
+                        doc.text('Price', margin + 80, yPos, {
+                            align: 'right'
+                        });
+                        doc.text('Qty', margin + 110, yPos, {
+                            align: 'right'
+                        });
+                        doc.text('Total', margin + 140, yPos, {
+                            align: 'right'
+                        });
+                        yPos += 10;
+                        // Category Subtotal (at the top of the table)
+                        doc.setFillColor(200, 230, 230);
+                        doc.rect(margin, yPos - 6, pageWidth - 2 * margin, 8, 'F');
+                        doc.setFontSize(12);
+                        doc.setTextColor(0, 78, 73);
+                        doc.text(`Subtotal for ${category}`, margin + 5, yPos);
+                        doc.text(`${categoryTotal}`, margin + 110, yPos, {
+                            align: 'right'
+                        });
+                        doc.text(`INR ${categoryRevenue.toFixed(2)}`, margin + 140, yPos, {
+                            align: 'right'
+                        });
+                        yPos += 10;
+                        // Table Content
+                        doc.setFontSize(11);
+                        doc.setTextColor(0);
+                        const categoryProducts = products.filter(p => p.category === category);
+                        for (const product of categoryProducts) {
+                            const count = counts[product.id] || 0;
+                            if (count > 0) {
+                                if (yPos > 260) {
+                                    doc.addPage();
+                                    yPos = 20;
+                                }
+                                const price = parseFloat(product.price);
+                                const revenue = count * price;
+                                doc.setFillColor(245, 245, 245);
+                                doc.rect(margin, yPos - 5, pageWidth - 2 * margin, 7, 'F');
+                                doc.text(product.name.substring(0, 35), margin + 5, yPos);
+                                doc.text(`INR ${price.toFixed(2)}`, margin + 80, yPos, {
+                                    align: 'right'
+                                });
+                                doc.text(`${count}`, margin + 110, yPos, {
+                                    align: 'right'
+                                });
+                                doc.text(`INR ${revenue.toFixed(2)}`, margin + 140, yPos, {
+                                    align: 'right'
+                                });
+                                yPos += 8;
+                            }
+                        }
+                        yPos += 10; // Space after each category
+                    }
+                }
+                // Footer
+                doc.setFontSize(10);
+                doc.setTextColor(150);
+                doc.text(`Generated on: ${new Date().toLocaleString()}`, pageWidth / 2, doc.internal.pageSize
+                    .height - 10, {
+                        align: 'center'
+                    });
+                doc.setDrawColor(0, 78, 73);
+                doc.line(margin, doc.internal.pageSize.height - 15, pageWidth - margin, doc.internal.pageSize
+                    .height - 15);
+                // Save the PDF
+                doc.save(`Irani_Dude_${today.replace(/\s/g, '_')}.pdf`);
+            };
+            request.onerror = () => {
+                showAlert('Error retrieving statistics data');
+            };
+        }
+        // Initialize the application when the page loads
+        window.addEventListener('load', async () => {
+            try {
+                await init();
+            } catch (error) {
+                console.error('Initialization failed:', error);
+                showAlert('Failed to initialize the application. Please try refreshing the page.');
+            }
+        });
     </script>
 </body>
 </html>
